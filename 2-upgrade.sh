@@ -1,7 +1,24 @@
 #! /bin/bash -xe
 
 alternative='cluster'
-oldver='5.4.7'
+oldver="${1}"
+if test -z "${1}"; then
+  echo "Usage $0 OLD_VERSION"
+  exit 1
+fi
+
+cdh_stop() {
+  hbmanager stop || :
+  hivemanager stop || :
+  impmanager stop || :
+  service hue stop || :
+  service oozie stop || :
+  service spark-history-server stop || :
+  service spark-master stop || :
+  yellowmanager stop || :
+  service zookeeper-server stop || :
+  ps xafuw | grep java || :
+}
 
 service puppet stop || :
 
@@ -20,14 +37,8 @@ apt-get update
 apt-get dist-upgrade -y -d
 
 # move away old configs
-hbmanager stop || :
-hivemanager stop || :
-service spark-history-server stop || :
-service spark-master stop || :
-yellowmanager stop || :
-service zookeeper-server stop || :
-ps xafuw | grep java || :
-for d in hadoop hbase hive zookeeper spark pig oozie impala sentry; do
+cdh_stop
+for d in hadoop hbase hive hue zookeeper spark pig oozie impala sentry; do
   if test -d /etc/${d}/conf.${alternative}; then
     mv /etc/${d}/conf.${alternative} /etc/${d}/conf.cdh${oldver}
     update-alternatives --auto ${d}-conf
@@ -39,13 +50,7 @@ test -f ${shs} && mv -v ${shs} ${shs}.fuck || :
 
 # upgrade!
 apt-get dist-upgrade -y
-hbmanager stop || :
-hivemanager stop || :
-service spark-history-server stop || :
-service spark-master-server stop || :
-yellowmanager stop || :
-service zookeeper-server stop || :
-ps xafuw | grep java || :
+cdh_stop
 
 # replace by the new configs
 puppet agent --test

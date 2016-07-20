@@ -1,9 +1,15 @@
 #! /bin/sh
 
-mkdir -p ~/backup-cdh547/default || :
-cd ~/backup-cdh547/
+oldver="${1}"
+if test -z "${1}"; then
+	echo "Usage $0 OLD_VERSION"
+	exit 1
+fi
 
-for d in hadoop hbase hive zookeeper spark pig oozie impala sentry; do
+mkdir -p ~/backup-cdh${oldver}/default || :
+cd ~/backup-cdh${oldver}/
+
+for d in hadoop hbase hive hue zookeeper spark pig oozie impala sentry; do
   if test -d /etc/${d}; then
     cp -aL /etc/${d}/conf ${d}
     for f in dist empty; do
@@ -12,6 +18,6 @@ for d in hadoop hbase hive zookeeper spark pig oozie impala sentry; do
       fi
     done
   fi
-  cp /etc/default/${d}* default/ 2>/dev/null || :
+  cp -p /etc/default/${d}* default/ 2>/dev/null || :
 done
 ls -la
