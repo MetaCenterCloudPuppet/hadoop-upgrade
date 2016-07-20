@@ -44,7 +44,7 @@ for d in hadoop hbase hive hue zookeeper spark pig oozie impala sentry; do
     update-alternatives --auto ${d}-conf
   fi
 done
-rm -fv ~hbase/.puppet-ssl-facl
+rm -fv ~hbase/.puppet-ssl-facl ~oozie/.puppet-ssl-facl || :
 shs='/etc/init.d/spark-history-server'
 test -f ${shs} && mv -v ${shs} ${shs}.fuck || :
 
