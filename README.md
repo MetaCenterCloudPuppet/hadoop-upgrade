@@ -1,5 +1,15 @@
 # Hadoop Upgrade Scripts
 
-## Usage
+Scripts to help with upgrade of the whole Hadoop environment:
 
-See [MetaCentrum wiki Hadoop Admin page](https://wiki.metacentrum.cz/metawiki/U%C5%BEivatel:Valtri/Hadoop/Installation#Upgrade).
+* *1-backup-conf.sh*: backup all current configs
+* *2-upgrade.sh*: upgrade process on one node:
+ * switch repositories
+ * switch alternatives
+ * upgrade
+ * SPNEGO workaround (patched hadoop auth jar copied)
+ * re-launch puppet
+
+Overall usage:
+
+See [MetaCentrum wiki Hadoop Admin page](https://wiki.metacentrum.cz/metawiki/U%C5%BEivatel:Valtri/Hadoop/Installation#Upgrade)
