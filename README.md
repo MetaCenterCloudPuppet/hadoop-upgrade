@@ -7,7 +7,6 @@ Scripts to help with upgrade of the whole Hadoop environment:
  * switch repositories
  * switch alternatives
  * upgrade
- * SPNEGO workaround (patched hadoop auth jar copied)
  * re-launch puppet
 
 Overall usage:
