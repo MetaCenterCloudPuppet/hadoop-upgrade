@@ -2,9 +2,8 @@
 
 alternative='cluster'
 oldver="${1}"
-ver="${2}"
-if test -z "${2}"; then
-  echo "Usage $0 OLD_VERSION VERSION"
+if test -z "${1}"; then
+  echo "Usage $0 OLD_VERSION"
   exit 1
 fi
 
@@ -52,12 +51,6 @@ test -f ${shs} && mv -v ${shs} ${shs}.fuck || :
 # upgrade!
 apt-get dist-upgrade -y
 cdh_stop
-
-# workaround for SPNEGO
-mv -v /usr/lib/hadoop/hadoop-auth-*.jar ~/system/
-rm -v /usr/lib/hadoop-mapreduce/hadoop-auth-*.jar
-wget -nv -P /usr/lib/hadoop/ --timestamping http://scientific.zcu.cz/repos/hadoop/MetaCentrum/hadoop-auth-2.6.0-cdh${ver}.jar
-cp -vp  /usr/lib/hadoop/hadoop-auth-*.jar /usr/lib/hadoop-mapreduce/
 
 # replace by the new configs
 puppet agent --test
