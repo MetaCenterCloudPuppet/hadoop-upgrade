@@ -49,12 +49,15 @@ shs='/etc/init.d/spark-history-server'
 test -f ${shs} && mv -v ${shs} ${shs}.fuck || :
 
 # upgrade!
+(echo zookeeper install; echo zookeeper-server install) | dpkg --set-selections
 apt-get dist-upgrade -y
 cdh_stop
+(echo zookeeper hold; echo zookeeper-server hold) | dpkg --set-selections
 
 # replace by the new configs
 puppet agent --test
 #/opt/puppet3-omnibus/bin/puppet agent --test
+#~/hadoop/puppet.sh --test
 
 # for HA (during puppet):
 #service hadoop-hdfs-namenode stop
